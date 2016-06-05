@@ -18,30 +18,14 @@ static void mark_the_second(GContext *ctx) {
         char text[3];
         int number = second / 5;
         
-        switch (number) {
-            case 0:
-                strcpy(text, "12");
-                break;
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            case 6:
-            case 7:
-            case 8:
-            case 9:
-                text[0] = 48 + number;
-                text[1] = 0;
-                break;
-            case 10:
-                strcpy(text, "10");
-                break;
-            case 11:
-                strcpy(text, "11");
-                break;
-        }
-        
+        if (number == 0) { strcpy(text, "12"); }
+        else if (number > 0 && number < 10) {
+          text[0] = 48 + number;
+          text[1] = 0;
+        } 
+        else if (number == 10){ strcpy(text, "10"); }
+        else { strcpy(text, "11"); }
+
         graphics_context_set_text_color(ctx, time_color);
         graphics_draw_text(ctx, text, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD), 
                      GRect(position_x,position_y,30,30), 
