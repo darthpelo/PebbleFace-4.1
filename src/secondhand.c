@@ -1,3 +1,9 @@
+//----------------------------------------------------------------------------------
+//
+// Project 4.1 from "Programming Pebble in C"
+// 
+// Alessio Roberto, June 2016
+
 #include <pebble.h>
 
 static Window *window;
@@ -12,7 +18,15 @@ static void change_colors() {
     
 }
 
+static void write_the_second(GContext *ctx, char * text, GFont const font, int text_x, int text_y) {
+    graphics_context_set_text_color(ctx, time_color);
+    graphics_draw_text(ctx, text, font, 
+                     GRect(text_x,text_y,30,30), 
+                     GTextOverflowModeTrailingEllipsis, GTextAlignmentCenter, NULL);
+}
+
 static void mark_the_second(GContext *ctx) {
+    int text_x, text_y;
     // Check if second is a multple of 5
     if (second % 5 == 0) {
         char text[3];
@@ -20,16 +34,67 @@ static void mark_the_second(GContext *ctx) {
         
         if (number == 0) { strcpy(text, "12"); }
         else if (number > 0 && number < 10) {
-          text[0] = 48 + number;
+          text[0] = 48 + number; // Number ASCII value
           text[1] = 0;
         } 
         else if (number == 10){ strcpy(text, "10"); }
         else { strcpy(text, "11"); }
-
-        graphics_context_set_text_color(ctx, time_color);
-        graphics_draw_text(ctx, text, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD), 
-                     GRect(position_x,position_y,30,30), 
-                     GTextOverflowModeTrailingEllipsis, GTextAlignmentCenter, NULL);
+        
+        // Now figure out the best position for drawing the numbers.
+        text_x = position_x;
+        text_y = position_y;
+        
+        switch (number) {
+            case 1: 
+                text_x -= 15;
+                text_y -= 30;
+                break;
+            case 2: 
+                text_x -= 7;
+                text_y -= 20;
+                break;
+            case 3: 
+               text_y -= 15;
+               break;
+            case 4: 
+                text_x -= 7;
+                text_y -= 10;
+                break;
+            case 5: 
+                text_x -= 7;
+                break;
+            case 6: 
+                text_x -= 15;
+                break;
+            case 7: 
+                text_x -= 21;
+                break;
+            case 8: 
+                text_x -= 21;
+                text_y -= 10;
+                break;
+            case 9:
+                text_x -= 30;
+                text_y -= 15;
+                break;
+            case 10:
+               text_x -= 30;
+               text_y -= 20;
+               break;
+            case 11: 
+               text_x -= 30;
+               text_y -= 30;
+               break;
+            case 0:
+               text_x -= 15;
+               text_y -= 30;
+               break;
+         }
+        if (number == 0) {
+          write_the_second(ctx, text, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD), text_x, text_y);
+        } else {
+          write_the_second(ctx, text, fonts_get_system_font(FONT_KEY_GOTHIC_24), text_x, text_y);
+      }
     }
 }
 
